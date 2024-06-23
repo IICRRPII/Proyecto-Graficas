@@ -7,14 +7,14 @@ import java.util.List;
 
 public class ProjectionPanel  {
 
-    public static void drawModel(BufferedImage b, Model3D model) {
+    public static void drawModel(BufferedImage b, Model3D model, float escala, int centerX, int centerY) {
 
         List<Vertex> vertices = model.getVertices();
         List<Face> faces = model.getFaces();
 
         // Parámetros de proyección
-        float scale = 10;
-        float fov = 90;
+        float scale = escala;
+        float fov = 100;
         int width = b.getWidth();
         int height = b.getHeight();
 
@@ -25,8 +25,8 @@ public class ProjectionPanel  {
             for (int i = 0; i < face.vertexIndices.length; i++) {
                 Vertex v = vertices.get(face.vertexIndices[i]);
                 v = Model3D.multiplicarMatriz(model.object, v);
-                xPoints[i] = (int) ((v.x * fov / (v.z + fov)) * scale) + width / 2;
-                yPoints[i] = (int) ((v.y * fov / (v.z + fov)) * scale) + height / 2;
+                xPoints[i] = (int) ((v.x * fov / (v.z + fov)) * scale) + centerX;
+                yPoints[i] = (int) ((v.y * fov / (v.z + fov)) * scale) + centerY;
             }
 
             b.getGraphics().fillPolygon(xPoints, yPoints, face.vertexIndices.length);

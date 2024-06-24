@@ -284,7 +284,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y = 100 + t*-.8;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float)(t*.02), 300, 300, colorNave);
         }
         
@@ -317,7 +317,7 @@ public class Animacion extends JFrame implements Runnable{
         for(Model3D model: models){
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float)(control), 300, 300, colorNave);
         }
         
@@ -362,7 +362,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y = control2*-1;
 
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, 1.5f, 300, 300, colorNave);
         }
         repaint();
@@ -383,7 +383,7 @@ public class Animacion extends JFrame implements Runnable{
             control3 = model.posicion.y;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, 1.5f, 300, 300, colorNave);
         }
         
@@ -395,7 +395,7 @@ public class Animacion extends JFrame implements Runnable{
 
 
                 ship.makeMatrix();
-                buffer.getGraphics().drawString("t= " + t,100,100);
+                
                 ProjectionPanel.drawModel(buffer, ship, (float)control4, 400, 120, colorMini);
             }
         }
@@ -428,7 +428,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y = control3*1.4;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, 1.5f, 300, (int) control, colorNave);
         }
         repaint();
@@ -453,7 +453,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y -= .7;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         repaint();
@@ -481,7 +481,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y -= 1;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         repaint();
@@ -497,7 +497,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y += 1;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         
@@ -542,7 +542,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y -= .01;
 
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         
@@ -584,7 +584,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y += .001;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
             
@@ -626,7 +626,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y -= .6;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         repaint();
@@ -666,7 +666,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y += .002;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
             
@@ -709,7 +709,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y += .002;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
                 
@@ -753,7 +753,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y += .002;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
                 
@@ -784,7 +784,7 @@ public class Animacion extends JFrame implements Runnable{
             model.posicion.y += .4;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }    
             
@@ -816,7 +816,7 @@ public class Animacion extends JFrame implements Runnable{
             extra.posicion.z -=.05;
             
             extra.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, extra, (float) control4, 000, dY[i], color2);
             i++;
         }
@@ -826,7 +826,7 @@ public class Animacion extends JFrame implements Runnable{
             model.rotacion.y += .04;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
     
@@ -866,7 +866,7 @@ public class Animacion extends JFrame implements Runnable{
             model.rotacion.y += .02;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }   
     
@@ -905,7 +905,7 @@ public class Animacion extends JFrame implements Runnable{
             model.rotacion.y += .02;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }    
     
@@ -948,7 +948,7 @@ public class Animacion extends JFrame implements Runnable{
             model.rotacion.y += .02;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }    
             
@@ -975,7 +975,7 @@ public class Animacion extends JFrame implements Runnable{
             model.rotacion.y += .02;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
+            
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         
@@ -1002,7 +1002,6 @@ public class Animacion extends JFrame implements Runnable{
             model.rotacion.y += .02;
             
             model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
             ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         } 
             

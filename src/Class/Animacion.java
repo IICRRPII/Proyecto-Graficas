@@ -49,12 +49,19 @@ public class Animacion extends JFrame implements Runnable{
     double extras2 = 0;
     double extras3 = 35;
     
+    Color color1 = new Color(168, 168, 168);
+    Color color2 = new Color(227, 228, 229);
+    Color colorNave = new Color(189, 183, 183);
+    Color colorMini = new Color(82, 9, 184);
+    Color colorMini2 = new Color(119, 31, 242);
+    Color colorMissile = new Color(247,7,7);
+    Color colorExplosivo = new Color(242, 161, 31);
+    
     public Animacion() throws IOException {
-        setTitle("Proyecto Animado");
+        setTitle("Reproducir animacion");
         setSize(700, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
         buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         bufferGraphics = buffer.getGraphics();
         bufferGraphics.clearRect(0, 0, getWidth(), getHeight());
@@ -72,7 +79,7 @@ public class Animacion extends JFrame implements Runnable{
         double[][] m = {
                 {1,0,0,10},
                 {0,1,0,0},
-                {0,0,1,10},
+                {0,0,1,8},
                 {0,0,0,1}
         };
         objeto.setObject(m);
@@ -246,7 +253,7 @@ public class Animacion extends JFrame implements Runnable{
         };
         lastnave.setObject(ln);
         lastShip.add(lastnave);
-
+        
         setVisible(true);
         this.run();
         repaint();
@@ -265,11 +272,7 @@ public class Animacion extends JFrame implements Runnable{
     public void actualizarVentana() {
         repaint();
     }
-
-    public void iniciarPrimesaEscena1(){
-        dibujarElementos1(buffer);
-    }
-
+    
     public void dibujarElementos1(BufferedImage buffer){
 //        casa.paintComponents(bufferGraphics);
         casa.FondoPantalla(buffer);
@@ -277,11 +280,12 @@ public class Animacion extends JFrame implements Runnable{
             //model.rotacion.x = t * 1;
             model.rotacion.x = 90;
             model.rotacion.y = 25;
+            model.posicion.z = 0;
             model.posicion.y = 100 + t*-.8;
             
             model.makeMatrix();
             buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float)(t*.02), 300, 300);
+            ProjectionPanel.drawModel(buffer, model, (float)(t*.02), 300, 300, colorNave);
         }
         
         for (Model3D ship : ships) {
@@ -297,12 +301,6 @@ public class Animacion extends JFrame implements Runnable{
         control -= .01;
         extras1 += .015;
         casa.FondoPantalla(buffer);
-        for(Model3D model: models){
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float)(control), 300, 300);
-        }
         
         int i = 0;
         for (Model3D extra : extras) {
@@ -311,8 +309,16 @@ public class Animacion extends JFrame implements Runnable{
             extra.posicion.y += 1;
             
             extra.makeMatrix();
-            ProjectionPanel.drawModel(buffer, extra, (float)extras1, distanciasX[i], 300);
+            ProjectionPanel.drawModel(buffer, extra, (float)extras1, distanciasX[i], 300, color1);
             i++;
+        }
+        color1 = color1.brighter();
+        
+        for(Model3D model: models){
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float)(control), 300, 300, colorNave);
         }
         
         repaint();
@@ -323,6 +329,30 @@ public class Animacion extends JFrame implements Runnable{
         control = 0;
         control2++;
         casa.FondoPantalla(buffer);
+        
+        int i = 0;
+        for (Model3D extra : extras) {
+            extra.posicion.y += 3.5;
+            extra.posicion.x += control2*.01;
+            
+            extra.makeMatrix();
+            ProjectionPanel.drawModel(buffer, extra, (float) (extras1+control2*.02), distanciasX[i], 300, color1);
+            i++;
+        }
+        color1 = color1.brighter();
+        
+        Color colorMissile = new Color(247,7,7);
+        extras2 += .06;
+        for (Model3D missile : missiles) {
+            missile.rotacion.x = 180;
+            missile.rotacion.y = 90;
+            missile.posicion.y += .5;
+            missile.posicion.x += control2*.01;
+            
+            missile.makeMatrix();
+            ProjectionPanel.drawModel(buffer, missile, (float)extras2, 300, 400, colorMissile);
+        }
+        
         for(Model3D model: models){
             //model.rotacion.x = t * 1;
             model.rotacion.x = 90;
@@ -333,28 +363,7 @@ public class Animacion extends JFrame implements Runnable{
 
             model.makeMatrix();
             buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, 1.5f, 300, 300);
-        }
-        
-        int i = 0;
-        for (Model3D extra : extras) {
-            extra.posicion.y += 3.5;
-            extra.posicion.x += control2*.01;
-            
-            extra.makeMatrix();
-            ProjectionPanel.drawModel(buffer, extra, (float) (extras1+control2*.02), distanciasX[i], 300);
-            i++;
-        }
-        
-        extras2 += .06;
-        for (Model3D missile : missiles) {
-            missile.rotacion.x = 180;
-            missile.rotacion.y = 90;
-            missile.posicion.y += .5;
-            missile.posicion.x += control2*.01;
-            
-            missile.makeMatrix();
-            ProjectionPanel.drawModel(buffer, missile, (float)extras2, 300, 400);
+            ProjectionPanel.drawModel(buffer, model, 1.5f, 300, 300, colorNave);
         }
         repaint();
     }
@@ -375,7 +384,7 @@ public class Animacion extends JFrame implements Runnable{
             
             model.makeMatrix();
             buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, 1.5f, 300, 300);
+            ProjectionPanel.drawModel(buffer, model, 1.5f, 300, 300, colorNave);
         }
         
         if(t>295){
@@ -387,7 +396,7 @@ public class Animacion extends JFrame implements Runnable{
 
                 ship.makeMatrix();
                 buffer.getGraphics().drawString("t= " + t,100,100);
-                ProjectionPanel.drawModel(buffer, ship, (float)control4, 400, 120);
+                ProjectionPanel.drawModel(buffer, ship, (float)control4, 400, 120, colorMini);
             }
         }
         
@@ -399,13 +408,6 @@ public class Animacion extends JFrame implements Runnable{
         control += .5;
         control3 += .6;
         casa.FondoPantalla(buffer);
-        for(Model3D model: models){
-            model.posicion.y = control3*1.4;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, 1.5f, 300, (int) control);
-        }
         
         extras2 += .02;
         int i = 0;
@@ -418,8 +420,16 @@ public class Animacion extends JFrame implements Runnable{
             missile.posicion.z -= .1;
             
             missile.makeMatrix();
-            ProjectionPanel.drawModel(buffer, missile, (float)extras2, 280, missileY[i]);
+            ProjectionPanel.drawModel(buffer, missile, (float)extras2, 280, missileY[i], colorMissile);
             i++;
+        }
+        
+        for(Model3D model: models){
+            model.posicion.y = control3*1.4;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, 1.5f, 300, (int) control, colorNave);
         }
         repaint();
     }
@@ -427,13 +437,6 @@ public class Animacion extends JFrame implements Runnable{
     public void dibujarElementos6(BufferedImage buffer){
         control5 -=.005;
         casa.FondoPantalla(buffer);
-        for(Model3D model: models){
-            model.posicion.y -= .7;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         extras1 += 0.18;
         for (Model3D extra : extras) {
@@ -443,7 +446,15 @@ public class Animacion extends JFrame implements Runnable{
             extra.posicion.z -= 1;
             
             extra.makeMatrix();
-            ProjectionPanel.drawModel(buffer, extra, (float)extras1, 300, 300);
+            ProjectionPanel.drawModel(buffer, extra, (float)extras1, 300, 300, color1);
+        }
+        
+        for(Model3D model: models){
+            model.posicion.y -= .7;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         repaint();
     }
@@ -451,16 +462,6 @@ public class Animacion extends JFrame implements Runnable{
     public void dibujarElementos7(BufferedImage buffer){
         
         casa.FondoPantalla(buffer);
-        for(Model3D model: models){
-            model.rotacion.x += .3;
-            model.rotacion.y += .2;
-            model.posicion.x += 2;
-            model.posicion.y -= 1;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         extras1 += 0.10;
         for (Model3D extra : extras) {
@@ -470,7 +471,18 @@ public class Animacion extends JFrame implements Runnable{
             extra.posicion.z -= 1;
             
             extra.makeMatrix();
-            ProjectionPanel.drawModel(buffer, extra, (float)extras1, 500, 300);
+            ProjectionPanel.drawModel(buffer, extra, (float)extras1, 500, 300, color1);
+        }
+        
+        for(Model3D model: models){
+            model.rotacion.x += .3;
+            model.rotacion.y += .2;
+            model.posicion.x += 2;
+            model.posicion.y -= 1;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         repaint();
     }
@@ -486,7 +498,7 @@ public class Animacion extends JFrame implements Runnable{
             
             model.makeMatrix();
             buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         
         repaint();
@@ -496,15 +508,6 @@ public class Animacion extends JFrame implements Runnable{
         extras1 += .008;
         control5 += .0001;
         casa.FondoPantalla(buffer);
-        for(Model3D model: models){
-            model.rotacion.y -=.012;
-            model.rotacion.x += 0.03;
-            model.posicion.y -= .01;
-
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         int[] dX = {100, 500};
         int i = 0;
@@ -513,7 +516,7 @@ public class Animacion extends JFrame implements Runnable{
             extra.posicion.y += .5;
             
             extra.makeMatrix();
-            ProjectionPanel.drawModel(buffer, extra, (float)extras1, dX[i], 300);
+            ProjectionPanel.drawModel(buffer, extra, (float)extras1, dX[i], 300, color1);
             i++;
         }
         
@@ -529,8 +532,18 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.z = control2;
             
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX[i], nY[i]);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX[i], nY[i], colorMini);
             i++;
+        }
+        
+        for(Model3D model: models){
+            model.rotacion.y -=.012;
+            model.rotacion.x += 0.03;
+            model.posicion.y -= .01;
+
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         
         repaint();
@@ -540,14 +553,6 @@ public class Animacion extends JFrame implements Runnable{
         control5 += .0001;
        
         casa.FondoPantalla(buffer);
-        for(Model3D model: models){
-            model.rotacion.x -= .05;
-            model.posicion.y += .001;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         int i = 0;
         int[] nX = {100, 200, 300};
@@ -560,7 +565,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .001;
             
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX[i], nY[i]);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX[i], nY[i], colorMini);
             i++;
         }
         
@@ -572,24 +577,23 @@ public class Animacion extends JFrame implements Runnable{
             fire.posicion.z += 1;
             
             fire.makeMatrix();
-            ProjectionPanel.drawModel(buffer, fire, (float) (control5+.001), 300, (int) control);
+            ProjectionPanel.drawModel(buffer, fire, (float) (control5+.001), 300, (int) control, Color.WHITE);
         
-        
+        for(Model3D model: models){
+            model.rotacion.x -= .05;
+            model.posicion.y += .001;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
+        }
+            
         repaint();
     }
     
     public void dibujarElementos11(BufferedImage buffer){         
         casa.FondoPantalla(buffer);
         
-        for(Model3D model: models){
-            model.rotacion.y += .08;
-            model.posicion.x += .4;
-            model.posicion.y -= .6;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         int i = 0;
         int[] nX = {100, 300};
@@ -603,7 +607,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .001;
             
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX[i], nY[i]);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX[i], nY[i], colorMini);
             i++;
         }
         
@@ -613,25 +617,23 @@ public class Animacion extends JFrame implements Runnable{
             explosion.rotacion.y -= .02;
             
             explosion.makeMatrix();
-            ProjectionPanel.drawModel(buffer, explosion, (float).8, 280, 250);
+            ProjectionPanel.drawModel(buffer, explosion, (float).8, 280, 250, colorExplosivo);
+        }
+        
+        for(Model3D model: models){
+            model.rotacion.y += .08;
+            model.posicion.x += .4;
+            model.posicion.y -= .6;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
         repaint();
     }
     
     public void dibujarElementos12(BufferedImage buffer){         
         casa.FondoPantalla(buffer);
-        
-        control5 -= .001;
-        for(Model3D model: models){
-            
-            model.rotacion.y -= .004;
-            model.posicion.x -= .002;
-            model.posicion.y += .002;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         int nX = 300;
         int nY = -100;
@@ -643,7 +645,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .002;
             
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY, colorMini);
             
         control3-=.05;    
         Model3D fire = fires.get(0);
@@ -654,14 +656,8 @@ public class Animacion extends JFrame implements Runnable{
             fire.posicion.z += 1;
             
             fire.makeMatrix();
-            ProjectionPanel.drawModel(buffer, fire, (float) (control3), 500, 100);
+            ProjectionPanel.drawModel(buffer, fire, (float) (control3), 500, 100, Color.WHITE);
                 
-        repaint();
-    }
-    
-    public void dibujarElementos13(BufferedImage buffer){         
-        casa.FondoPantalla(buffer);
-        
         control5 -= .001;
         for(Model3D model: models){
             
@@ -671,8 +667,14 @@ public class Animacion extends JFrame implements Runnable{
             
             model.makeMatrix();
             buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
+            
+        repaint();
+    }
+    
+    public void dibujarElementos13(BufferedImage buffer){         
+        casa.FondoPantalla(buffer);
         
         int nX = 300;
         int nY = -100;
@@ -684,7 +686,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .01;
             
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY, colorMini);
             
         control3-=.05;    
         for (int i=0; i<2; i++) {
@@ -696,14 +698,8 @@ public class Animacion extends JFrame implements Runnable{
             fire.posicion.z += 1 + delay_shoots;
             
             fire.makeMatrix();
-            ProjectionPanel.drawModel(buffer, fire, (float) (control3), 500, 100);
+            ProjectionPanel.drawModel(buffer, fire, (float) (control3), 500, 100, Color.WHITE);
         }
-                
-        repaint();
-    }
-    
-    public void dibujarElementos14(BufferedImage buffer){         
-        casa.FondoPantalla(buffer);
         
         control5 -= .001;
         for(Model3D model: models){
@@ -714,8 +710,15 @@ public class Animacion extends JFrame implements Runnable{
             
             model.makeMatrix();
             buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
+                
+        repaint();
+    }
+    
+    public void dibujarElementos14(BufferedImage buffer){         
+        casa.FondoPantalla(buffer);
+        
         
         int nX = 300;
         int nY = -100;
@@ -727,7 +730,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .025;
             
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY, colorMini);
             
         control3-=.05;    
         for (int i=0; i<3; i++) {
@@ -739,7 +742,19 @@ public class Animacion extends JFrame implements Runnable{
             fire.posicion.z += 1 + delay_shoots;
             
             fire.makeMatrix();
-            ProjectionPanel.drawModel(buffer, fire, (float) (control3+delay_shoots), 500, 100);
+            ProjectionPanel.drawModel(buffer, fire, (float) (control3+delay_shoots), 500, 100, Color.WHITE);
+        }
+        
+        control5 -= .001;
+        for(Model3D model: models){
+            
+            model.rotacion.y -= .004;
+            model.posicion.x -= .002;
+            model.posicion.y += .002;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
                 
         repaint();
@@ -747,18 +762,6 @@ public class Animacion extends JFrame implements Runnable{
     
     public void dibujarElementos15(BufferedImage buffer){         
         casa.FondoPantalla(buffer);
-        
-        control5 += .001;
-        for(Model3D model: models){
-            
-            model.rotacion.y -= .04;
-            model.posicion.x -= .3;
-            model.posicion.y += .4;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         int nX = 300;
         int nY = -100;
@@ -771,8 +774,20 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.z -= .09;
             
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY, colorMini);
                 
+        control5 += .001;
+        for(Model3D model: models){
+            
+            model.rotacion.y -= .04;
+            model.posicion.x -= .3;
+            model.posicion.y += .4;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
+        }    
+            
         repaint();
     }
     
@@ -781,14 +796,6 @@ public class Animacion extends JFrame implements Runnable{
         control4 += .01;
         control5 -= .001;
         control3 = 0;
-        for(Model3D model: models){
-            
-            model.rotacion.y += .04;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         int nX = 300;
         int nY = -100;
@@ -798,7 +805,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .005;
         
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY, colorMini);
                 
         int i = 0;
         int[] dY = {00, 400};
@@ -810,8 +817,17 @@ public class Animacion extends JFrame implements Runnable{
             
             extra.makeMatrix();
             buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, extra, (float) control4, 000, dY[i]);
+            ProjectionPanel.drawModel(buffer, extra, (float) control4, 000, dY[i], color2);
             i++;
+        }
+        
+        for(Model3D model: models){
+            
+            model.rotacion.y += .04;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
         }
     
         repaint();
@@ -821,14 +837,6 @@ public class Animacion extends JFrame implements Runnable{
         casa.FondoPantalla(buffer);
         control4 += .001;
         control5 -= .0001;
-        for(Model3D model: models){
-            
-            model.rotacion.y += .02;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         int nX = 300;
         int nY = -100;
@@ -838,7 +846,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .001;
         
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY, colorMini);
         
         control3 += .1;
         control6 -= .015;
@@ -851,8 +859,16 @@ public class Animacion extends JFrame implements Runnable{
             fire.posicion.z = 10;
             
             fire.makeMatrix();
-            ProjectionPanel.drawModel(buffer, fire, (float) (control6), 280, 300);
+            ProjectionPanel.drawModel(buffer, fire, (float) (control6), 280, 300, color2);
         
+         for(Model3D model: models){
+            
+            model.rotacion.y += .02;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
+        }   
     
         repaint();
     }
@@ -861,14 +877,6 @@ public class Animacion extends JFrame implements Runnable{
         casa.FondoPantalla(buffer);
         control4 += .001;
         control5 -= .0001;
-        for(Model3D model: models){
-            
-            model.rotacion.y += .02;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         int nX = 300;
         int nY = -100;
@@ -878,7 +886,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .001;
         
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, nX, nY, colorMini);
         
         control6 -= .01;
         Model3D fire = fires.get(0);
@@ -890,8 +898,16 @@ public class Animacion extends JFrame implements Runnable{
             
             
             fire.makeMatrix();
-            ProjectionPanel.drawModel(buffer, fire, (float) (control6), 280, 300);
+            ProjectionPanel.drawModel(buffer, fire, (float) (control6), 280, 300, Color.WHITE);
         
+        for(Model3D model: models){
+            
+            model.rotacion.y += .02;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
+        }    
     
         repaint();
     }
@@ -900,14 +916,6 @@ public class Animacion extends JFrame implements Runnable{
         casa.FondoPantalla(buffer);
         control4 += .001;
         control5 -= .0001;
-        for(Model3D model: models){
-            
-            model.rotacion.y += .02;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
         
         extras3 += .0001;
         Model3D ship = ships.get(1);
@@ -916,7 +924,7 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .0005;
         
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)extras3, 300, -100);
+            ProjectionPanel.drawModel(buffer, ship, (float)extras3, 300, -100, colorMini);
             
             
         Model3D ship2 = ships.get(0);
@@ -925,7 +933,7 @@ public class Animacion extends JFrame implements Runnable{
             ship2.posicion.x += .3;
         
             ship2.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship2, (float)extras3, 0, -100);
+            ProjectionPanel.drawModel(buffer, ship2, (float)extras3, 0, -100, colorMini2);
             
         Model3D fire = fires.get(0);
             fire.rotacion.x -= .1;
@@ -933,8 +941,17 @@ public class Animacion extends JFrame implements Runnable{
             fire.posicion.y += .09;
             
             fire.makeMatrix();
-            ProjectionPanel.drawModel(buffer, fire, (float) (control6), 280, 300);
+            ProjectionPanel.drawModel(buffer, fire, (float) (control6), 280, 300, Color.WHITE);
     
+        for(Model3D model: models){
+            
+            model.rotacion.y += .02;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
+        }    
+            
         repaint();
     }
     
@@ -942,16 +959,7 @@ public class Animacion extends JFrame implements Runnable{
         casa.FondoPantalla(buffer);
         control4 += .001;
         control5 -= .0001;
-        control3 = 0;
-        for(Model3D model: models){
-            
-            model.rotacion.y += .02;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
-        
+        control3 = 0;        
         
         if(t<3370){
         Model3D explosion = explosions.get(0);
@@ -959,9 +967,18 @@ public class Animacion extends JFrame implements Runnable{
             explosion.rotacion.y -= .02;
             
             explosion.makeMatrix();
-            ProjectionPanel.drawModel(buffer, explosion, (float)1.5, 500, 100);
+            ProjectionPanel.drawModel(buffer, explosion, (float)1.5, 500, 100, colorExplosivo);
         }
     
+        for(Model3D model: models){
+            
+            model.rotacion.y += .02;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
+        }
+        
         repaint();
     }
     
@@ -969,15 +986,7 @@ public class Animacion extends JFrame implements Runnable{
         casa.FondoPantalla(buffer);
         control4 += .001;
         control5 -= .0001;
-        for(Model3D model: models){
-            
-            model.rotacion.y += .02;
-            
-            model.makeMatrix();
-            buffer.getGraphics().drawString("t= " + t,100,100);
-            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control);
-        }
-        
+       
         control3+=.8;
         Model3D ship = lastShip.get(0);
             ship.rotacion.y = 180;
@@ -986,7 +995,16 @@ public class Animacion extends JFrame implements Runnable{
             ship.posicion.y -= .0005;
         
             ship.makeMatrix();
-            ProjectionPanel.drawModel(buffer, ship, (float)control3, 600, 400);
+            ProjectionPanel.drawModel(buffer, ship, (float)control3, 600, 400, colorMini);
+           
+        for(Model3D model: models){
+            
+            model.rotacion.y += .02;
+            
+            model.makeMatrix();
+            buffer.getGraphics().drawString("t= " + t,100,100);
+            ProjectionPanel.drawModel(buffer, model, (float) control5, 300, (int) control, colorNave);
+        } 
             
         repaint();
     }
@@ -998,12 +1016,12 @@ public class Animacion extends JFrame implements Runnable{
             explosion.rotacion.y -= .02;
             
             explosion.makeMatrix();
-            ProjectionPanel.drawModel(buffer, explosion, (float)2.5, 300, 300);
+            ProjectionPanel.drawModel(buffer, explosion, (float)2.5, 300, 300, colorExplosivo);
             
         repaint();
     }
 
-   @Override
+    @Override
     public void run() {
         while (true){
             try {

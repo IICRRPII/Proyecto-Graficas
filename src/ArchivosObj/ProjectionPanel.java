@@ -7,8 +7,10 @@ import java.util.List;
 
 public class ProjectionPanel  {
 
-    public static void drawModel(BufferedImage b, Model3D model, float escala, int centerX, int centerY) {
+    public static void drawModel(BufferedImage b, Model3D model, float escala, int centerX, int centerY, Color color) {
 
+        java.awt.Graphics g = b.getGraphics();
+        g.setColor(color);
         List<Vertex> vertices = model.getVertices();
         List<Face> faces = model.getFaces();
 
@@ -29,7 +31,7 @@ public class ProjectionPanel  {
                 yPoints[i] = (int) ((v.y * fov / (v.z + fov)) * scale) + centerY;
             }
 
-            b.getGraphics().fillPolygon(xPoints, yPoints, face.vertexIndices.length);
+            g.fillPolygon(xPoints, yPoints, face.vertexIndices.length);
         }
     }
 }
